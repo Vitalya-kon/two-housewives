@@ -1,0 +1,55 @@
+<script setup>
+import { ref, reactive } from "vue";
+import axios from "axios";
+const activeTab = ref('gallery')
+const image = ref(null);
+const galleries = ref([]);
+const onFileChange = (e) => {
+  image.value = e.target.files[0];
+};
+const getGalleries = async () => {
+  const response = await axios.get("/api/galleries");
+  galleries.value = response.data;
+};
+const addService = async () => {
+  let formData = new FormData();
+  formData.append("image", image.value);
+
+  const response = await axios.post("/api/galleries", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  galleries.value.push(response.data);
+  image.value = null;
+};
+getGalleries();
+</script>
+<template>
+    <div class="bg-transparent min-h-screen">
+        <div class="bg-slate-200 min-h-screen">
+            <div class="pb-44">
+            <div class=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5 container-lg lg:container">
+                <div v-for="gallery in galleries" :key="gallery.id" class="mt-10">
+                    <div class="relative mx-auto w-full" v-auto-animate>
+                        <div  class="shadow p-4 rounded-lg bg-white relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full"
+                        >
+                            <div class="flex justify-center relative rounded-lg overflow-hidden h-80">
+                                <div class="transition-transform duration-500 transform ease-in-out hover:scale-110 w-full">
+                                    <div class="absolute inset-0 bg-gray-500">
+                                        <img :src="gallery.url_image"
+                                            alt=""
+                                            class="h-full w-full object-cover"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ftp://u167552@109.95.211.29/www/two-housewives.ru/resources/js/app.js
+                /var/www/u167552/data
+            </div>
+        </div>
+        </div>
+    </div>
+</template>
